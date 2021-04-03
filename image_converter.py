@@ -20,14 +20,6 @@ functions:
     * image_to_ascii - Returns the image fully encoded
 
 """
-#
-#
-#
-#
-
-
-
-
 
 from PIL import Image
 
@@ -50,8 +42,8 @@ def get_rgb_text(rgb_value):
     """
 
     if len(rgb_value) == 4:
-        if rgb_value[3] == 0:
-            return "11"
+        if rgb_value[3] == 0: # White-space
+            return "11" # 11
         rgb_value = [rgb_value[0], rgb_value[1], rgb_value[2]]
 
     for index, value in enumerate(rgb_value):
@@ -61,32 +53,31 @@ def get_rgb_text(rgb_value):
             rgb_value[index] = 0
 
     if rgb_value == [255, 0, 0]: # Red
-        return "01"
+        return "01" # 01
     elif 255 in rgb_value: # Anything that is not red, will be white
-        return "00"
+        return "00" # 00
     elif rgb_value == [0, 0, 0]: # Black
-        return "10"
+        return "10" # 10
 
 def image_to_ascii(image):
+    """Converts an image into text. 
+    """
     width, height = image.size
 
     string_builder = ""
     for index, pixel in enumerate(image.getdata(), start=0):
         if ((index) % width == 0):
             string_builder += '\n' #+ str((index) / width) + " "
-        print(pixel)
         string_builder += get_rgb_text(pixel)
 
-
-    print(string_builder)
+    return string_builder
 
 
 def main():
-    im = Image.open("./fonts/hejemma.png")
-    print(im)
+    im = Image.open("./images/test2.png")
+    im = im.convert("RGBA")
 
-
-    image_to_ascii(im)
+    print(image_to_ascii(im))
 
 if __name__ == '__main__':
     main()
