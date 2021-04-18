@@ -22,6 +22,7 @@ functions:
 """
 
 from PIL import Image
+from os import listdir
 
 def get_rgb_text(rgb_value):
     """Gets the two bit representation of a RGB value.
@@ -60,24 +61,63 @@ def get_rgb_text(rgb_value):
         return "10" # 10
 
 def image_to_ascii(image):
-    """Converts an image into text. 
+    """Converts an image into text.
+
+    Enumerates over all pixels in image and converts each value into
+    a character.
+
+    Parameter:
+        image - Raw data of a RGBA png file
+
+    Returns:
+        String - A string containing a character for each pixel in the image.
+
     """
     width, height = image.size
 
     string_builder = ""
-    for index, pixel in enumerate(image.getdata(), start=0):
+    for index, pixel in enumerate(image.getdata(), start=1):
+        string_builder += get_rgb_text(pixel)
         if ((index) % width == 0):
             string_builder += '\n' #+ str((index) / width) + " "
-        string_builder += get_rgb_text(pixel)
 
     return string_builder
 
+def save_string(string_to_save, filename="default_filename", file_format="txt"):
+    """Saves the string image as a file.
+    Default filename is 'default_filename.txt'.
+
+    Parameters:
+        string_to_save - The string that will be saved in the file.
+        filename - Filename. Defaults to 'default_filename'
+        file_format - File format of the file. Defaults to txt.
+    """
+    filename_and_path = filename + "." + file_format
+    f = open(filename_and_path, "w")
+    f.write(string_to_save)
+    f.close()
+
 
 def main():
-    im = Image.open("./images/test2.png")
-    im = im.convert("RGBA")
+    """Creates files with converted data from all images in  './images'.
+    Saves all the converted data in './converted_images'.
+    """
+    image_path = './images/'
+    list_of_files = listdir(image_path)
 
-    print(image_to_ascii(im))
+    save_path = './converted_images/'
+    for filename in list_of_files:
+        if filename.split('.')[1] == 'png':
+            with Image.open(image_path + filename) as im:
+                print(filename)
+                im = im.convert("RGBA")
+                save_string(image_to_ascii(im), filename=save_path + filename)
+    #
+    # file_to_test = "unopened_letter.png"
+    # im = Image.open("./images/" + file_to_test)
+    # im = im.convert("RGBA")
+    # save_string(image_to_ascii(im), file_to_test.split('.')[0])
+    # im.close()
 
 if __name__ == '__main__':
     main()
