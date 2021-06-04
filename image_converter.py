@@ -16,8 +16,12 @@ Transparent = 11
 This script can also be imported as a module and contains the following
 functions:
 
-    * get_rgb_text - Returns the encoded string of a RGB value
-    * image_to_ascii - Returns the image fully encoded
+    * get_rgb_text(rgb_value) - Returns the encoded string of a RGB value
+    * image_to_ascii(image) - Returns the image as a string
+    * save_string(string_to_save, filename, file_format) - Saves a string in a file
+
+Required package:
+* PIL
 
 """
 
